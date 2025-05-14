@@ -292,8 +292,6 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    Okay, here's the edited version keeping the variables symbolic:
-
     Given:
     1.  Gravity: $(0, -Mg)$.
     2.  Reactor force: $(f_x, f_y)$ where:
