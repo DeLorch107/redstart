@@ -285,8 +285,10 @@ def _(mo):
     Given:
     1.  Gravity: $(0, -Mg)$. With $M=1$ kg and $g=1$ m/s², this is $(0, -1)$.
     2.  Reactor force: $(f_x, f_y)$ where:
-        *   $f_x = -f \sin(\theta+\phi)$
-        *   $f_y = f \cos(\theta+\phi)$
+   
+         $f_x = -f \sin(\theta+\phi)$
+      
+           $f_y = f \cos(\theta+\phi)$
 
     We apply Newton's Second Law ($\vec{F} = m\vec{a}$) for the $x$ and $y$ components.
 
