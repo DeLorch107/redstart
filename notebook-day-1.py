@@ -567,7 +567,7 @@ def _(g, l, np, plt):
             # Compute derivatives
             ddx = f * np.sin(theta + phi)
             ddy = -f * np.cos(theta + phi) - g
-            ddtheta = 3 * f * np.sin(phi)
+            ddtheta = - 3 * f * np.sin(phi)
         
             return np.array([dx, ddx, dy, ddy, dtheta, ddtheta])
     
