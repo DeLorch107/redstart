@@ -224,6 +224,14 @@ def _(mo):
     return
 
 
+@app.cell
+def _():
+    g = 1.0  # gravity constant in m/s^2
+    M = 1.0  # mass in kg
+    l = 1.0  # half-length of the booster in meters (since total length is 2 meters)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -231,6 +239,28 @@ def _(mo):
     ## 🧩 Forces
 
     Compute the force $(f_x, f_y) \in \mathbb{R}^2$ applied to the booster by the reactor.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    Since the force is at angle \( \varphi \) from the booster axis, and the booster axis is at angle \( \theta \) from vertical,  
+    the force makes an angle of \( (\theta + \varphi) \) with the vertical, measured counterclockwise.
+
+    Therefore:
+
+    \[
+    f_x = f \cdot \sin(\theta + \varphi)
+    \]
+
+    \[
+    f_y = -f \cdot \cos(\theta + \varphi)
+    \]
+
     """
     )
     return
@@ -252,9 +282,102 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    ## Equations of Motion for the Booster
+
+    We need to derive the ordinary differential equations (ODEs) that govern the motion of the booster's center of mass coordinates $(x,y)$.
+
+    For this system, we'll apply Newton's Second Law ($\vec{F} = m\vec{a}$) to determine how the center of mass coordinates change over time.
+
+    The forces acting on the booster are:
+    1. Gravity: $(0, -Mg) = (0, -1)$ since $M = 1$ kg and $g = 1$ m/s²
+    2. Reactor force: $(f_x, f_y) = (f\sin(\theta+\phi), -f\cos(\theta+\phi))$
+
+    Using Newton's Second Law for the $x$ and $y$ components:
+
+    For the $x$-coordinate:
+
+    $M\ddot{x} = f_x$
+
+    $1 \cdot \ddot{x} = f\sin(\theta+\phi)$
+
+    $\ddot{x} = f\sin(\theta+\phi)$
+
+    For the $y$-coordinate:
+
+    $M\ddot{y} = f_y - Mg$
+
+    $1 \cdot \ddot{y} = -f\cos(\theta+\phi) - 1$
+
+    $\ddot{y} = -f\cos(\theta+\phi) - 1$
+
+    Therefore, the ordinary differential equations governing the motion of the center of mass $(x,y)$ are:
+
+    $\ddot{x} = f\sin(\theta+\phi)$
+
+    $\ddot{y} = -f\cos(\theta+\phi) - g$
+
+    Or, with our simplified values:
+
+    $\ddot{x} = f\sin(\theta+\phi)$
+
+    $\ddot{y} = -f\cos(\theta+\phi) - 1$
+
+    These second-order ODEs describe the acceleration of the booster's center of mass in the $x$ and $y$ directions as functions of the thrust magnitude $f$, the booster's orientation $\theta$, and the thrust angle $\phi$ relative to the booster axis.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## 🧩 Moment of inertia
 
     Compute the moment of inertia $J$ of the booster and define the corresponding Python variable `J`.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    Here's the markdown for computing the moment of inertia of the booster:
+
+    ---
+
+    ## Computing the Moment of Inertia of the Booster
+
+    We need to calculate the moment of inertia $J$ of the booster about its center of mass.
+
+    Given information:
+    - The booster is a rigid tube of length $2\ell = 2$ meters
+    - Mass $M = 1$ kg is uniformly distributed along its length
+    - The moment of inertia is calculated about the center of mass
+
+    For a uniform rod of mass $M$ and length $2\ell$ rotating about its center of mass, the formula for the moment of inertia is:
+
+    $J = \frac{1}{12}M(2\ell)^2$
+
+    Substituting our values:
+
+    $J = \frac{1}{12} \cdot 1 \cdot 2^2$
+
+    $J = \frac{1}{12} \cdot 4$
+
+    $J = \frac{1}{3}$
+
+    Therefore, the moment of inertia of the booster is $J = \frac{1}{3}$ kg·m².
+
+    In Python, we would define this as:
+
+    ```python
+    J = 1/3  # moment of inertia in kg·m²
+    ```
+
+    This value represents the resistance of the booster to rotational acceleration about its center of mass, which will be important for analyzing the rotational dynamics of the system.
     """
     )
     return
