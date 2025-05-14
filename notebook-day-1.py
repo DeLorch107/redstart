@@ -254,11 +254,11 @@ def _(mo):
     Therefore:
 
     \[
-    f_y = -f \cdot \sin(\theta + \varphi)
+    f_x = -f \cdot \sin(\theta + \varphi)
     \]
 
     \[
-    f_x = f \cdot \cos(\theta + \varphi)
+    f_y = f \cdot \cos(\theta + \varphi)
     \]
 
     """
@@ -282,47 +282,53 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    ## Equations of Motion for the Booster
+    Given:
+    1.  Gravity: $(0, -Mg)$. With $M=1$ kg and $g=1$ m/s², this is $(0, -1)$.
+    2.  Reactor force: $(f_x, f_y)$ where:
+        *   $f_x = -f \sin(\theta+\phi)$
+        *   $f_y = f \cos(\theta+\phi)$
 
-    We need to derive the ordinary differential equations (ODEs) that govern the motion of the booster's center of mass coordinates $(x,y)$.
+    We apply Newton's Second Law ($\vec{F} = m\vec{a}$) for the $x$ and $y$ components.
 
-    For this system, we'll apply Newton's Second Law ($\vec{F} = m\vec{a}$) to determine how the center of mass coordinates change over time.
+    **For the x-coordinate:**
 
-    The forces acting on the booster are:
-    1. Gravity: $(0, -Mg) = (0, -1)$ since $M = 1$ kg and $g = 1$ m/s²
-    2. Reactor force: $(f_x, f_y) = (f\sin(\theta+\phi), -f\cos(\theta+\phi))$
-
-    Using Newton's Second Law for the $x$ and $y$ components:
-
-    For the $x$-coordinate:
+    The sum of forces in the x-direction is $\sum F_x$.
+    The only force component in the x-direction is the reactor force $f_x$.
+    The gravitational force has no x-component.
 
     $M\ddot{x} = f_x$
 
-    $1 \cdot \ddot{x} = f\sin(\theta+\phi)$
+    Substituting $M=1$ and the new definition for $f_x$:
 
-    $\ddot{x} = f\sin(\theta+\phi)$
+    $1 \cdot \ddot{x} = -f \sin(\theta+\phi)$
 
-    For the $y$-coordinate:
+    So, the equation for the x-acceleration is:
+
+    $\ddot{x} = -f \sin(\theta+\phi)$
+
+    **For the y-coordinate:**
+
+    The sum of forces in the y-direction is $\sum F_y$.
+    The forces in the y-direction are the reactor force $f_y$ and the gravitational force $-Mg$.
 
     $M\ddot{y} = f_y - Mg$
 
-    $1 \cdot \ddot{y} = -f\cos(\theta+\phi) - 1$
+    Substituting $M=1$, $g=1$, and the new definition for $f_y$:
 
-    $\ddot{y} = -f\cos(\theta+\phi) - 1$
+    $1 \cdot \ddot{y} = (f \cos(\theta+\phi)) - (1 \cdot 1)$
 
-    Therefore, the ordinary differential equations governing the motion of the center of mass $(x,y)$ are:
+    $ \ddot{y} = f \cos(\theta+\phi) - 1$
 
-    $\ddot{x} = f\sin(\theta+\phi)$
+    So, the equation for the y-acceleration is:
 
-    $\ddot{y} = -f\cos(\theta+\phi) - g$
+    $\ddot{y} = f \cos(\theta+\phi) - 1$
 
-    Or, with our simplified values:
+    **Therefore, with this latest set of definitions for $f_x$ and $f_y$, the ordinary differential equations governing the motion of the center of mass $(x,y)$ are:**
 
-    $\ddot{x} = f\sin(\theta+\phi)$
+    $\ddot{x} = -f \sin(\theta+\phi)$
 
-    $\ddot{y} = -f\cos(\theta+\phi) - 1$
+    $\ddot{y} = f \cos(\theta+\phi) - 1$
 
-    These second-order ODEs describe the acceleration of the booster's center of mass in the $x$ and $y$ directions as functions of the thrust magnitude $f$, the booster's orientation $\theta$, and the thrust angle $\phi$ relative to the booster axis.
     """
     )
     return
