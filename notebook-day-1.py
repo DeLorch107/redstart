@@ -229,7 +229,7 @@ def _():
     g = 1.0  # gravity constant in m/s^2
     M = 1.0  # mass in kg
     l = 1.0  # half-length of the booster in meters (since total length is 2 meters)
-    return
+    return g, l
 
 
 @app.cell(hide_code=True)
@@ -254,11 +254,11 @@ def _(mo):
     Therefore:
 
     \[
-    f_x = f \cdot \sin(\theta + \varphi)
+    f_y = -f \cdot \sin(\theta + \varphi)
     \]
 
     \[
-    f_y = -f \cdot \cos(\theta + \varphi)
+    f_x = f \cdot \cos(\theta + \varphi)
     \]
 
     """
@@ -379,6 +379,12 @@ def _(mo):
     return
 
 
+@app.cell
+def _():
+    J = 1/3
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -386,6 +392,56 @@ def _(mo):
     ## 🧩 Tilt
 
     Give the ordinary differential equation that governs the tilt angle $\theta$.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    ## Ordinary Differential Equation for the Tilt Angle θ
+
+    To determine the differential equation for the tilt angle θ, we need to analyze the rotational dynamics of the booster using the rotational form of Newton's Second Law:
+
+    $J\ddot{\theta} = \tau_{total}$
+
+    where:
+
+    - $J$ is the moment of inertia we calculated ($J = \frac{1}{3}$ kg·m²)
+  
+    - $\ddot{\theta}$ is the angular acceleration
+
+    - $\tau_{total}$ is the total torque acting on the booster
+
+    The torques acting on the booster include:
+
+    1. **Torque due to the reactor force**: 
+       The reactor force $f$ acts at the bottom of the booster (distance $\ell$ from the center of mass) at an angle $\phi$ relative to the booster axis. This creates a torque of:
+       $\tau_{reactor} = \ell \cdot f \cdot \sin(\phi)$
+   
+       The $\sin(\phi)$ term appears because only the component of force perpendicular to the booster axis contributes to torque.
+
+    2. **Torque due to gravity**:
+       For a uniform rod, gravity effectively acts at the center of mass, so there is no torque due to gravity about the center of mass.
+
+    Therefore, the total torque is:
+    $\tau_{total} = \ell \cdot f \cdot \sin(\phi)$
+
+    Substituting into the rotational equation of motion:
+    $J\ddot{\theta} = \ell \cdot f \cdot \sin(\phi)$
+
+    With our values $J = \frac{1}{3}$ and $\ell = 1$:
+    $\frac{1}{3}\ddot{\theta} = f \cdot \sin(\phi)$
+
+    Multiplying both sides by 3:
+    $\ddot{\theta} = 3f \cdot \sin(\phi)$
+
+    Therefore, the ordinary differential equation governing the tilt angle θ is:
+    $\ddot{\theta} = 3f \cdot \sin(\phi)$
+
+    This equation shows that the angular acceleration of the booster depends on the thrust magnitude $f$ and the angle $\phi$ of the thrust relative to the booster axis.
     """
     )
     return
@@ -432,6 +488,111 @@ def _(mo):
     Test this typical example with your function `redstart_solve` and check that its graphical output makes sense.
     """
     )
+    return
+
+
+@app.cell
+def _(g, l, np, plt):
+    from scipy.integrate import solve_ivp
+
+    def redstart_solve(t_span, y0, f_phi):
+        """
+        Solves the Redstart booster equations of motion.
+    
+        Parameters:
+        -----------
+        t_span : list or tuple
+            Initial and final time [t0, tf]
+        y0 : list or ndarray
+            Initial state [x, dx, y, dy, theta, dtheta]
+        f_phi : function
+            Function that takes (t, y) and returns [f, phi]
+        
+        Returns:
+        --------
+        sol : function
+            Function that takes a time t and returns the state
+        """
+        def dynamics(t, y):
+            """
+            The dynamics of the system.
+        
+            Parameters:
+            -----------
+            t : float
+                Current time
+            y : ndarray
+                Current state [x, dx, y, dy, theta, dtheta]
+            
+            Returns:
+            --------
+            dydt : ndarray
+                Time derivative of state [dx, ddx, dy, ddy, dtheta, ddtheta]
+            """
+            # Unpack state
+            x, dx, y, dy, theta, dtheta = y
+        
+            # Get control inputs
+            f, phi = f_phi(t, y)
+        
+            # Compute derivatives
+            ddx = f * np.sin(theta + phi)
+            ddy = -f * np.cos(theta + phi) - g
+            ddtheta = 3 * f * np.sin(phi)
+        
+            return np.array([dx, ddx, dy, ddy, dtheta, ddtheta])
+    
+        # Solve ODE
+        ode_sol = solve_ivp(
+            dynamics, 
+            t_span, 
+            y0, 
+            method='RK45', 
+            t_eval=None, 
+            rtol=1e-6, 
+            atol=1e-9,
+            dense_output=True
+        )
+    
+        # Create solution function that properly handles the interpolation
+        def sol(t):
+            if np.isscalar(t):
+                # Handle single time point
+                return ode_sol.sol(t)
+            else:
+                # Handle array of time points
+                result = np.zeros((len(y0), len(t)))
+                for i, ti in enumerate(t):
+                    result[:, i] = ode_sol.sol(ti)
+                return result
+    
+        return sol
+
+    def free_fall_example():
+        t_span = [0.0, 5.0]
+        y0 = [0.0, 0.0, 10.0, 0.0, 0.0, 0.0]  # state: [x, dx, y, dy, theta, dtheta]
+    
+        def f_phi(t, y):
+            return np.array([0.0, 0.0])  # input [f, phi]
+    
+        sol = redstart_solve(t_span, y0, f_phi)
+    
+        t = np.linspace(t_span[0], t_span[1], 1000)
+        y_t = sol(t)[2]  # Extract y-position component
+    
+        plt.figure(figsize=(10, 6))
+        plt.plot(t, y_t, label=r"$y(t)$ (height in meters)")
+        plt.plot(t, l * np.ones_like(t), color="grey", ls="--", label=r"$y=\ell$")
+        plt.title("Free Fall")
+        plt.xlabel("time $t$")
+        plt.grid(True)
+        plt.legend()
+    
+        return plt.gcf()
+
+    # Test the free fall example
+    fig = free_fall_example()
+    plt.show()
     return
 
 
