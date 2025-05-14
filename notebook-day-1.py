@@ -344,10 +344,6 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
-    Here's the markdown for computing the moment of inertia of the booster:
-
-    ---
-
     ## Computing the Moment of Inertia of the Booster
 
     We need to calculate the moment of inertia $J$ of the booster about its center of mass.
