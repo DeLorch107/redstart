@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.6"
+__generated_with = "0.13.8"
 app = marimo.App()
 
 
@@ -62,7 +62,7 @@ def _():
 
     import matplotlib as mpl
     import matplotlib.pyplot as plt
-    from matplotlib.animation import FuncAnimation, FFMpegWriter
+    from matplotlib.animation import FuncAnimation, PillowWriter
 
     from tqdm import tqdm
 
@@ -71,7 +71,7 @@ def _():
     import autograd.numpy as np
     import autograd.numpy.linalg as la
     from autograd import isinstance, tuple
-    return FFMpegWriter, FuncAnimation, np, plt, tqdm
+    return FuncAnimation, PillowWriter, np, plt, tqdm
 
 
 @app.cell(hide_code=True)
@@ -157,13 +157,13 @@ def _(mo):
 
 
 @app.cell
-def _(FFMpegWriter, FuncAnimation, mo, np, plt, tqdm):
+def _(FuncAnimation, PillowWriter, mo, np, plt, tqdm):
     def make_video(output):
-        fig = plt.figure(figsize=(10, 6)) # width, height in inches (1 inch = 2.54 cm)
+        fig = plt.figure(figsize=(10, 6))
         num_frames = 100
         fps = 30 # Number of frames per second
-
-        def animate(frame_index):    
+    
+        def animate(frame_index):
             # Clear the canvas and redraw everything at each step
             plt.clf()
             plt.xlim(0, 2*np.pi)
@@ -172,26 +172,37 @@ def _(FFMpegWriter, FuncAnimation, mo, np, plt, tqdm):
             plt.xlabel("x")
             plt.ylabel("y")
             plt.grid(True)
-
+        
             x = np.linspace(0, 2*np.pi, 100)
             phase = frame_index / 10
             y = np.sin(x + phase)
             plt.plot(x, y, "r-", lw=2, label=f"sin(x + {phase:.1f})")
             plt.legend()
-
-            pbar.update(1)
-
-        pbar = tqdm(total=num_frames, desc="Generating video")
+        
+            if hasattr(make_video, 'pbar'):
+                make_video.pbar.update(1)
+    
+        make_video.pbar = tqdm(total=num_frames, desc="Generating video")
         anim = FuncAnimation(fig, animate, frames=num_frames)
-        writer = FFMpegWriter(fps=fps)
+    
+        # Use PillowWriter instead of FFMpegWriter (no external dependencies)
+        writer = PillowWriter(fps=fps)
+    
+        # Change output filename to .gif since we're using PillowWriter
+        if output.endswith('.mp4'):
+            output = output.replace('.mp4', '.gif')
+    
         anim.save(output, writer=writer)
-
+    
         print()
         print(f"Animation saved as {output!r}")
+        return output
 
-    _filename = "wave_animation.mp4"
-    make_video(_filename)
-    (mo.video(src=_filename))
+    _filename = "wave_animation.gif"  # Changed to .gif
+    output_file = make_video(_filename)
+
+    # Use marimo's image display
+    mo.image(output_file)
     return
 
 
