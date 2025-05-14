@@ -711,47 +711,53 @@ def _(mo):
 
 @app.cell
 def _(l, np, plt, redstart_solve):
-    # Pre‐computed cubic coefficients
-    a = 0.144
-    b = -1.08
-
-
     def thrust_profile(t):
-        # f(t) = -0.864 t + 1.16
         return -0.864*t + 1.16
 
-    def free_boost_example():
+
+    def simulate_and_plot():
         t_span = [0.0, 5.0]
-        # Initial state: x, dx, y, dy, theta, dtheta
-        y0 = [0, 0, 10, 0, 0, 0]
+        y0 = [0, 0, 10, 0, 0, 0]  # x, dx, y, dy, theta, dtheta
 
-        def f_phi(t, y):
-            return np.array([thrust_profile(t), 0.0])  # phi=0
+        # Build solver
+        sol = redstart_solve(t_span, y0,
+                             lambda t, y: (np.array([thrust_profile(t), 0.0])))
 
-        sol = redstart_solve(t_span, y0, f_phi)
-
+        # Time grid
         t = np.linspace(*t_span, 500)
         states = sol(t)
         y_t   = states[2]
         dy_t  = states[3]
+        f_t   = thrust_profile(t)
 
-        # Plot trajectory
+        # Plot y(t)
         plt.figure(figsize=(8,5))
         plt.plot(t, y_t, label="y(t)")
         plt.plot(t, l*np.ones_like(t), 'k--', label="y = ℓ")
         plt.xlabel("t [s]")
         plt.ylabel("height y [m]")
-        plt.title("Forced descent to y(5)=ℓ with y'(5)=0")
+        plt.title("Trajectory: y(0)=10 → y(5)=ℓ, ẏ(5)=0")
         plt.legend()
         plt.grid(True)
+
+        # Plot f(t)
+        plt.figure(figsize=(8,4))
+        plt.plot(t, f_t, label="f(t)", linewidth=2)
+        plt.xlabel("t [s]")
+        plt.ylabel("thrust f [N]")
+        plt.title("Applied Thrust Profile")
+        plt.axhline(0, color='gray', linestyle='--', linewidth=1)
+        plt.legend()
+        plt.grid(True)
+
         plt.show()
 
-        # Print final values to check
-        y5, dy5 = float(y_t[-1]), float(dy_t[-1])
-        print(f"At t=5: y = {y5:.6f}, y_dot = {dy5:.6f}")
+        # Final check
+        print(f"At t=5: y = {y_t[-1]:.6f}, y_dot = {dy_t[-1]:.6f}")
 
-    # Run it
-    free_boost_example()
+    if __name__ == "__main__":
+        simulate_and_plot()
+
     return
 
 
