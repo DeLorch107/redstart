@@ -292,15 +292,17 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    Okay, here's the edited version keeping the variables symbolic:
+
     Given:
-    1.  Gravity: $(0, -Mg)$. With $M=1$ kg and $g=1$ m/s², this is $(0, -1)$.
+    1.  Gravity: $(0, -Mg)$.
     2.  Reactor force: $(f_x, f_y)$ where:
    
-         $f_x = -f \sin(\theta+\phi)$
-      
-           $f_y = f \cos(\theta+\phi)$
+        $f_x = -f \sin(\theta+\phi)$
+    
+        $f_y = f \cos(\theta+\phi)$
 
-    We apply Newton's Second Law ($\vec{F} = m\vec{a}$) for the $x$ and $y$ components.
+    We apply Newton's Second Law ($\vec{F} = M\vec{a}$) for the $x$ and $y$ components.
 
     **For the x-coordinate:**
 
@@ -310,13 +312,13 @@ def _(mo):
 
     $M\ddot{x} = f_x$
 
-    Substituting $M=1$ and the new definition for $f_x$:
+    Substituting the definition for $f_x$:
 
-    $1 \cdot \ddot{x} = -f \sin(\theta+\phi)$
+    $M\ddot{x} = -f \sin(\theta+\phi)$
 
     So, the equation for the x-acceleration is:
 
-    $\ddot{x} = -f \sin(\theta+\phi)$
+    $\ddot{x} = -\frac{f}{M} \sin(\theta+\phi)$
 
     **For the y-coordinate:**
 
@@ -325,22 +327,19 @@ def _(mo):
 
     $M\ddot{y} = f_y - Mg$
 
-    Substituting $M=1$, $g=1$, and the new definition for $f_y$:
+    Substituting the definition for $f_y$:
 
-    $1 \cdot \ddot{y} = (f \cos(\theta+\phi)) - (1 \cdot 1)$
-
-    $ \ddot{y} = f \cos(\theta+\phi) - 1$
+    $M\ddot{y} = f \cos(\theta+\phi) - Mg$
 
     So, the equation for the y-acceleration is:
 
-    $\ddot{y} = f \cos(\theta+\phi) - 1$
+    $\ddot{y} = \frac{f}{M} \cos(\theta+\phi) - g$
 
     **Therefore, with this latest set of definitions for $f_x$ and $f_y$, the ordinary differential equations governing the motion of the center of mass $(x,y)$ are:**
 
-    $\ddot{x} = -f \sin(\theta+\phi)$
+    $\ddot{x} = -\frac{f}{M} \sin(\theta+\phi)$
 
-    $\ddot{y} = f \cos(\theta+\phi) - 1$
-
+    $\ddot{y} = \frac{f}{M} \cos(\theta+\phi) - g$
     """
     )
     return
