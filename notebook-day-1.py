@@ -229,7 +229,7 @@ def _():
     g = 1.0  # gravity constant in m/s^2
     M = 1.0  # mass in kg
     l = 1.0  # half-length of the booster in meters (since total length is 2 meters)
-    return g, l
+    return M, g, l
 
 
 @app.cell(hide_code=True)
@@ -273,7 +273,7 @@ def _(np):
     angle_phi = 0
     f_x = -f * np.sin(angle_phi+angle_theta)
     f_y = f * np.cos(angle_phi+angle_theta)
-    return
+    return angle_phi, angle_theta, f
 
 
 @app.cell(hide_code=True)
@@ -343,6 +343,16 @@ def _(mo):
     return
 
 
+@app.cell
+def _(M, angle_phi, angle_theta, f, g, np):
+    # Declare/calculate ddot_x (x-acceleration)
+    ddot_x = -(f / M) * np.sin(angle_phi+angle_theta)
+
+    # Declare/calculate ddot_y (y-acceleration)
+    ddot_y = (f / M) * np.cos(angle_phi+angle_theta) - g
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -359,44 +369,45 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    Okay, here's the rewritten section keeping the variables as letters:
+
     ## Computing the Moment of Inertia of the Booster
 
     We need to calculate the moment of inertia $J$ of the booster about its center of mass.
 
     Given information:
-    - The booster is a rigid tube of length $2\ell = 2$ meters
-    - Mass $M = 1$ kg is uniformly distributed along its length
-    - The moment of inertia is calculated about the center of mass
+    - The booster is a rigid tube of total length, let's call this $L_{total}$. The problem states this total length is $2\ell$.
+    - Mass $M$ is uniformly distributed along its length.
+    - The moment of inertia is calculated about the center of mass.
 
-    For a uniform rod of mass $M$ and length $2\ell$ rotating about its center of mass, the formula for the moment of inertia is:
+    For a uniform rod of mass $M_{rod}$ and length $L_{rod}$ rotating about its center of mass, the general formula for the moment of inertia is:
+
+    $J_{rod} = \frac{1}{12}M_{rod}(L_{rod})^2$
+
+    In our case, for the booster:
+    - The mass of the booster is $M$.
+    - The total length of the booster is $2\ell$.
+
+    Substituting these specific parameters into the general formula:
 
     $J = \frac{1}{12}M(2\ell)^2$
 
-    Substituting our values:
+    We can simplify this expression:
 
-    $J = \frac{1}{12} \cdot 1 \cdot 2^2$
+    $J = \frac{1}{12}M(4\ell^2)$
+    $J = \frac{4}{12}M\ell^2$
+    $J = \frac{1}{3}M\ell^2$
 
-    $J = \frac{1}{12} \cdot 4$
+    Therefore, the moment of inertia of the booster is $J = \frac{1}{3}M\ell^2$.
 
-    $J = \frac{1}{3}$
-
-    Therefore, the moment of inertia of the booster is $J = \frac{1}{3}$ kg·m².
-
-    In Python, we would define this as:
-
-    ```python
-    J = 1/3  # moment of inertia in kg·m²
-    ```
-
-    This value represents the resistance of the booster to rotational acceleration about its center of mass, which will be important for analyzing the rotational dynamics of the system.
     """
     )
     return
 
 
 @app.cell
-def _():
-    J = 1/3
+def _(M, l):
+    J = 1/3 * M * l**2
     return
 
 
@@ -424,41 +435,44 @@ def _(mo):
 
     where:
 
-    - $J$ is the moment of inertia we calculated ($J = \frac{1}{3}$ kg·m²)
-  
-    - $\ddot{\theta}$ is the angular acceleration
-
-    - $\tau_{total}$ is the total torque acting on the booster
+    -   $J$ is the moment of inertia of the booster about its center of mass (as defined in the previous section, $J = \frac{1}{3}M\ell^2$).
+    -   $\ddot{\theta}$ is the angular acceleration.
+    -   $\tau_{total}$ is the total torque acting on the booster.
 
     The torques acting on the booster include:
 
-    1. **Torque due to the reactor force**: 
-       The reactor force $f$ acts at the bottom of the booster (distance $\ell$ from the center of mass) at an angle $\phi$ relative to the booster axis. This creates a torque of:
-       $\tau_{reactor} = \ell \cdot f \cdot \sin(\phi)$
-   
-       The $\sin(\phi)$ term appears because only the component of force perpendicular to the booster axis contributes to torque.
+    1.  **Torque due to the reactor force**:
+        The reactor force $f$ acts at one end of the booster (a distance $\ell$ from the center of mass) at an angle $\phi$ relative to the booster's longitudinal axis. This creates a torque of:
+        $\tau_{reactor} = - \ell \cdot f \cdot \sin(\phi)$
 
-    2. **Torque due to gravity**:
-       For a uniform rod, gravity effectively acts at the center of mass, so there is no torque due to gravity about the center of mass.
+        The $\sin(\phi)$ term appears because only the component of force perpendicular to the lever arm (the booster's half-length $\ell$) contributes to the torque about the center of mass.
 
-    Therefore, the total torque is:
-    $\tau_{total} = \ell \cdot f \cdot \sin(\phi)$
+    2.  **Torque due to gravity**:
+        For a uniform rod, gravity effectively acts at the center of mass. Therefore, the torque due to gravity about the center of mass is zero.
+        $\tau_{gravity} = 0$
 
-    Substituting into the rotational equation of motion:
-    $J\ddot{\theta} = \ell \cdot f \cdot \sin(\phi)$
+    Therefore, the total torque is solely due to the reactor force:
+    $\tau_{total} = - \ell \cdot f \cdot \sin(\phi)$
 
-    With our values $J = \frac{1}{3}$ and $\ell = 1$:
-    $\frac{1}{3}\ddot{\theta} = f \cdot \sin(\phi)$
+    Substituting this into the rotational equation of motion (using the $J$ defined previously):
+    $J\ddot{\theta} = - \ell \cdot f \cdot \sin(\phi)$
 
-    Multiplying both sides by 3:
-    $\ddot{\theta} = 3f \cdot \sin(\phi)$
+    To solve for $\ddot{\theta}$, we divide both sides by $J$:
+    $\ddot{\theta} = - \frac{\ell \cdot f \cdot \sin(\phi)}{J}$
 
-    Therefore, the ordinary differential equation governing the tilt angle θ is:
-    $\ddot{\theta} = 3f \cdot \sin(\phi)$
+    Therefore, the ordinary differential equation governing the tilt angle $\theta$, expressed in terms of the previously defined moment of inertia $J$, the half-length $\ell$, the reactor force magnitude $f$, and the thrust angle $\phi$, is:
+    $\ddot{\theta} = - \frac{\ell f \sin(\phi)}{J}$
 
-    This equation shows that the angular acceleration of the booster depends on the thrust magnitude $f$ and the angle $\phi$ of the thrust relative to the booster axis.
+
+    (If one were to then substitute the expression for $J = \frac{1}{3}M\ell^2$, it would simplify to $\ddot{\theta} = - \frac{3f \sin(\phi)}{M\ell}$ as derived before, but the request was to keep $J$ as the defined variable in this step.)
     """
     )
+    return
+
+
+@app.cell
+def _(M, angle_phi, f, l, np):
+    ddot_angle_theta = - (3 * f * np.sin(angle_phi)) / (M * l)
     return
 
 
