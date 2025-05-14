@@ -266,6 +266,16 @@ def _(mo):
     return
 
 
+@app.cell
+def _(np):
+    f = 0
+    angle_theta = 0
+    angle_phi = 0
+    f_x = -f * np.sin(angle_phi+angle_theta)
+    f_y = f * np.cos(angle_phi+angle_theta)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
