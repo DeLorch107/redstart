@@ -1068,6 +1068,136 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    ### Linearized Model of the Redstart Booster
+    **Linearization Approach**
+
+    We'll linearize the system around the equilibrium point we found earlier:
+
+    * $\theta = 0$ (vertical orientation)
+
+    * $\phi = 0$ (thrust aligned with booster axis)
+
+    * $f = Mg$ (thrust exactly balancing gravity)
+
+    * $x$ and $y$ at some constant position with zero velocity
+
+    Let's denote the deviations from equilibrium as:
+
+    $\Delta x = x - x_0$
+
+    $\Delta \dot{x} = \dot{x} - 0 = \dot{x}$
+
+    $\Delta y = y - y_0$
+
+    $\Delta \dot{y} = \dot{y} - 0 = \dot{y}$
+
+    $\Delta \theta = \theta - 0 = \theta$
+
+    $\Delta \dot{\theta} = \dot{\theta} - 0 = \dot{\theta}$
+
+    $\Delta f = f - Mg$
+
+    $\Delta \phi = \phi - 0 = \phi$
+
+    Original Nonlinear Dynamics
+
+    Recall the nonlinear equations of motion:
+
+    $\ddot{x} = -\frac{f}{M} \sin(\theta + \phi)$
+
+    $\ddot{y} = \frac{f}{M} \cos(\theta + \phi) - g$
+
+    $\ddot{\theta} = -\frac{\ell \sin(\phi) f}{J}$
+
+    Linearization Process
+
+    We'll use a first-order Taylor expansion to linearize each equation around the equilibrium.
+
+    **Linearizing $\ddot{x}$ :**
+
+    $\ddot{x} = -\frac{f}{M} \sin(\theta + \phi)$
+
+    At equilibrium,
+    $\theta = 0$,
+    $\phi = 0$,
+    and $f = Mg$,
+
+    so $\sin(\theta + \phi) \approx \theta + \phi$ for small angles.
+
+    $\ddot{x} \approx -\frac{Mg + \Delta f}{M} (\Delta\theta + \Delta\phi)$
+
+    Ignoring higher-order terms (products of small deviations):
+
+    $\ddot{x} \approx -g(\Delta\theta + \Delta\phi) - \frac{\Delta f}{M}(\Delta\theta + \Delta\phi)$
+
+    Since $\Delta\theta$ and $\Delta\phi$ are small, their product with $\Delta f$ is a higher-order term we can neglect:
+
+    $\ddot{x} \approx -g(\Delta\theta + \Delta\phi)$
+
+    Therefore:
+
+    $\Delta\ddot{x} \approx -g(\Delta\theta + \Delta\phi)$
+
+    **Linearizing $\ddot{y}$ :**
+
+    $\ddot{y} = \frac{f}{M} \cos(\theta + \phi) - g$
+
+    At equilibrium,  $\cos(\theta + \phi) \approx 1 - \frac{(\theta + \phi)^2}{2}$ for small angles.
+
+    $\ddot{y} \approx \frac{Mg + \Delta f}{M}\left(1 - \frac{(\Delta\theta + \Delta\phi)^2}{2}\right) - g$
+
+    Expanding:
+
+    $\ddot{y} \approx g + \frac{\Delta f}{M} - \frac{g(\Delta\theta + \Delta\phi)^2}{2} - \frac{\Delta f}{M}\frac{(\Delta\theta + \Delta\phi)^2}{2} - g$
+
+    Ignoring higher-order terms:
+
+    $\ddot{y} \approx \frac{\Delta f}{M}$
+
+    Therefore:
+
+    $\Delta\ddot{y} \approx \frac{\Delta f}{M}$
+
+    **Linearizing $\ddot{\theta}$ :**
+
+    $\ddot{\theta} = -\frac{\ell \sin(\phi) f}{J}$
+
+    At equilibrium, $\phi = 0$, so $\sin(\phi) \approx \phi$ for small angles.
+
+    $\ddot{\theta} \approx -\frac{\ell \Delta\phi (Mg + \Delta f)}{J}$
+
+    Expanding and ignoring higher-order terms:
+
+    $\ddot{\theta} \approx -\frac{\ell Mg \Delta\phi}{J} - \frac{\ell \Delta f \Delta\phi}{J}$
+
+    Since the product $\Delta f \Delta\phi$ is a higher-order term:
+
+    $\ddot{\theta} \approx -\frac{\ell Mg \Delta\phi}{J}$
+
+    Therefore:
+
+    $\Delta\ddot{\theta} \approx -\frac{\ell Mg \Delta\phi}{J}$
+
+    Linearized System Equations
+
+    Summarizing our linearized equations:
+
+    * $\Delta\ddot{x} = -g(\Delta\theta + \Delta\phi)$
+
+    * $\Delta\ddot{y} = \frac{\Delta f}{M}$
+
+    * $\Delta\ddot{\theta} = -\frac{\ell Mg \Delta\phi}{J}$
+
+    These are the linearized ordinary differential equations that govern the system's behavior in the neighborhood of the equilibrium configuration.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## 🧩 Standard Form
 
     What are the matrices $A$ and $B$ associated to this linear model in standard form?
