@@ -1551,6 +1551,105 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    ## Free Fall Without Thrust
+
+    In this scenario, we analyze a free fall with **no applied thrust**, which implies that the external force and torque are zero:
+
+    $$
+    f(t) = 0, \quad \phi(t) = 0
+    $$
+
+    ### System Dynamics
+
+    The simplified equations of motion under these conditions become:
+
+    $$
+    \begin{aligned}
+    \Delta \ddot{x}(t) &= 0 \quad &&
+    \Delta \ddot{y}(t) &= -g \quad &&
+    \Delta \ddot{\theta}(t) &= 0 \quad &&
+    \end{aligned}
+    $$
+
+    ### Initial Conditions
+
+    We assume the system starts with the following initial state at \( t = 0 \):
+
+    $$
+    \begin{aligned}
+    \Delta x(0) &= 0 \quad &&
+    \Delta \dot{x}(0) &= 0 \quad &&
+    \Delta y(0) &= 10 \quad &&
+    \Delta \dot{y}(0) &= 0 \quad &&
+    \Delta \theta(0) &= \frac{\pi}{4} \quad &&
+    \Delta \dot{\theta}(0) &= 0 \quad &&
+    \end{aligned}
+    $$
+
+    ### Analytical Solutions
+
+    Solving the equations analytically with the initial conditions above, we obtain:
+
+    $$
+    \begin{aligned}
+    \Delta x(t) &= 0 \quad &&
+    \Delta y(t) &= -\frac{1}{2} g t^2 + 10 \quad &&
+    \Delta \theta(t) &= \frac{\pi}{4} \quad &&
+    \end{aligned}
+    $$
+    """
+    )
+    return
+
+
+@app.cell
+def _(g, np, plt):
+    from scipy.integrate import solve_ivp
+
+    theta0 = np.radians(45)
+    y0 = [0, 0, 10, 0, theta0, 0] 
+
+    # Linearized dynamics (free fall: f=0, ϕ=0)
+    def dynamics(t, y):
+        return [
+            y[1],           
+            0,               
+            y[3],            
+            -g,              
+            y[5],            
+            0               
+        ]
+
+    # for 5 sec
+    sol = solve_ivp(dynamics, [0, 5], y0, t_eval=np.linspace(0, 5, 200))
+
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+
+    ax1.plot(sol.t, sol.y[2], 'b-', linewidth=2)
+    ax1.set_title('Vertical Position y(t)')
+    ax1.set_xlabel('Time (s)')
+    ax1.set_ylabel('Height (m)')
+    ax1.grid(True)
+    ax1.axhline(0, color='r', linestyle='--', label='Ground')
+    ax1.legend()
+    ax2.plot(sol.t, np.degrees(sol.y[4]), 'r-', linewidth=2)
+    ax2.set_title('Tilt Angle θ(t)')
+    ax2.set_xlabel('Time (s)')
+    ax2.set_ylabel('Angle (degrees)')
+    ax2.grid(True)
+    ax2.axhline(45, color='g', linestyle='--', label='Initial angle')
+    ax2.legend()
+    plt.tight_layout()
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## 🧩 Manually Tuned Controller
 
     Try to find the two missing coefficients of the matrix 
