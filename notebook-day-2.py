@@ -1693,6 +1693,106 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    The control input is defined as:
+
+    $$
+    u(t) = \Delta \phi(t) = -K \mathbf{x}(t)
+    $$
+
+    with gain matrix \( K \) structured as:
+
+    $$
+    K = \begin{bmatrix}
+    0 & 0 & k_3 & k_4
+    \end{bmatrix}
+    $$
+
+    This simplifies the control law to:
+
+    $$
+    u(t) = -k_3 \Delta \theta(t) - k_4 \Delta \dot{\theta}(t)
+    $$
+
+
+    ## System Dynamics (Linearized)
+
+    From the linearized model, we know that:
+
+    $$
+    \Delta \ddot{\theta}(t) = -\alpha \, \Delta \phi(t)
+    $$
+
+    Substituting the control input into the dynamics yields:
+
+    $$
+    \Delta \ddot{\theta}(t) = \alpha (k_3 \Delta \theta(t) + k_4 \Delta \dot{\theta}(t))
+    $$
+
+    or rearranged:
+
+    $$
+    \Delta \ddot{\theta} - \alpha k_4 \Delta \dot{\theta} - \alpha k_3 \Delta \theta = 0
+    $$
+
+    This represents a **second-order homogeneous differential equation**, commonly expressed as:
+
+    $$
+    \Delta \ddot{\theta} + 2\xi \omega_n \Delta \dot{\theta} + \omega_n^2 \Delta \theta = 0
+    $$
+
+
+    ## Matching Coefficients
+
+    Comparing terms, we identify the relationships:
+
+    - \( \alpha k_4 = -2\xi \omega_n \)
+    - \( \alpha k_3 = -\omega_n^2 \)
+
+    ## Control Specifications
+
+    We aim to meet the following performance criteria:
+
+    - Angular position \( \Delta \theta(t) \) should decay to zero in **less than 20 seconds**
+    - Both \( \Delta \theta(t) \) and control input \( \Delta \phi(t) \) should stay within \( \pm \frac{\pi}{2} \)
+    - Initial angular deviation:  
+      $$\Delta \theta(0) = \frac{\pi}{4} \approx 0.785 \, \text{rad}$$
+
+    To achieve a responsive yet stable system, we opt for:
+
+    - **Natural frequency**: \( \omega_n = 0.5 \, \text{rad/s} \) ⇒ implies settling in < 20 s
+    - **Damping ratio**: \( \xi = 0.8 \) ⇒ near-critical damping (smooth decay)
+
+    This gives:
+
+    - \( \omega_n^2 = 0.25 \)
+    - \( 2\xi\omega_n = 0.8 \)
+
+    ## Gain Calculation (For \( \alpha = 3 \))
+
+    Plugging into the coefficient relationships:
+
+    - \( k_3 = -\frac{0.25}{\alpha} = -\frac{1}{12} \)
+    - \( k_4 = -\frac{0.8}{\alpha} = -\frac{4}{15} \)
+
+    Final gains:
+
+    $$
+    \boxed{
+    K = \begin{bmatrix}
+    0 & 0 & -\dfrac{1}{12} & -\dfrac{4}{15}
+    \end{bmatrix}
+    }
+    $$
+
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## 🧩 Controller Tuned with Pole Assignment
 
     Using pole assignement, find a matrix
