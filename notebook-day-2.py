@@ -1378,76 +1378,13 @@ def _(mo):
     $$
     A = \begin{pmatrix}
     0 & 1 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & -g & 0 \\
     0 & 0 & 0 & 1 & 0 & 0 \\
-    0 & 0 & -g & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 \\
     0 & 0 & 0 & 0 & 0 & 1 \\
     0 & 0 & 0 & 0 & 0 & 0 \\
     \end{pmatrix}
     $$
-
-    When reordered according to the state vector $[x, \dot{x}, \theta, \dot{\theta}, y, \dot{y}]$, the matrix becomes **block upper triangular**:
-
-    $$
-    A = 
-    \begin{pmatrix}
-    A_{x\theta} & 0 \\
-    0 & A_y
-    \end{pmatrix}
-    $$
-
-    ### Characteristic Polynomial
-
-    For a block diagonal or block triangular matrix, the determinant factorizes:
-
-    $$
-    \det(sI - A) = \det(sI - A_{x\theta}) \cdot \det(sI - A_y)
-    $$
-
-    If the system were completely decoupled, the determinant would simplify to:
-
-    $$
-    \det(sI - A) = 
-    \det\begin{pmatrix}s & 0 \\ -1 & s\end{pmatrix} \cdot 
-    \det\begin{pmatrix}s & 0 \\ -1 & s\end{pmatrix} \cdot 
-    \det\begin{pmatrix}s & 0 \\ -1 & s\end{pmatrix}
-    $$
-
-    ### Submatrix $A_{x\theta}$
-
-    $$
-    A_{x\theta} = 
-    \begin{pmatrix}
-    0 & 1 & 0 & 0 \\
-    0 & 0 & -g & 0 \\
-    0 & 0 & 0 & 1 \\
-    0 & 0 & 0 & 0 \\
-    \end{pmatrix}
-    $$
-
-    The eigenvalues of $A_{x\theta}$ are:
-
-    $$
-    0, 0, 0, 0
-    $$
-
-    ### Submatrix $A_y$
-
-    $$
-    A_y = 
-    \begin{pmatrix}
-    0 & 1 \\
-    0 & 0 \\
-    \end{pmatrix}
-    $$
-
-    The eigenvalues of $A_y$ are:
-
-    $$
-    0, 0
-    $$
-
-    ---
 
     ### Conclusion
 
@@ -1518,7 +1455,7 @@ def _(mo):
       $$C_y = [B_y, A_y B_y] = \begin{pmatrix} 0 & \frac{1}{M} \\ \frac{1}{M} & 0 \end{pmatrix}$$
 
   
-    * **Rank**: 2 → ✅ Subsystem is controllable.
+    * **Rank**: 2 → Subsystem is controllable.
 
     ---
 
@@ -1582,7 +1519,7 @@ def _(mo):
     \right)
     = 3 \cdot [(-1)(0 - 0) + 0 + 3(0 - (-9))] = 3 \cdot 27 = 81 \neq 0$$
 
-    * **Rank**: 4 → ✅ Subsystem is controllable.
+    * **Rank**: 4 → Subsystem is controllable.
 
     ---
 
@@ -1592,7 +1529,7 @@ def _(mo):
     * Subsystem 2: rank = 4
     * Total rank = $2 + 4 = 6$
 
-    ✅ **Conclusion**: The overall system is **controllable**.
+     **Conclusion**: The overall system is **controllable**.
     """
     )
     return
