@@ -1388,16 +1388,10 @@ def _(mo):
 
     ### Conclusion
 
-    All six eigenvalues of $A$ are located at the **origin** ($\lambda = 0$) on the **imaginary axis**. Therefore:
+    All six eigenvalues of $A$ are located at the origin ($\lambda = 0$) on the imaginary axis. Therefore:
 
-    * The system is **not asymptotically stable**.
-    * The presence of repeated zero eigenvalues with **geometric multiplicity less than algebraic multiplicity** (e.g., large Jordan blocks) implies the system is **unstable**.
-    * This can lead to solutions like:
-
-      $$x(t) = t,\quad y(t) = t$$
-
-      which **grow unbounded** over time.
-
+    * The system is not asymptotically stable.
+    * The presence of repeated zero eigenvalues with geometric multiplicity less than algebraic multiplicity (e.g., large Jordan blocks) implies the system is unstable.
     """
     )
     return
@@ -1428,108 +1422,6 @@ def _(mo):
     $$
 
     has **full rank**, i.e., rank 6.
-
-    ---
-
-    ### Decoupling into Subsystems
-
-    The system can be considered as two **decoupled subsystems**:
-
-    ---
-
-    ### Subsystem 1:
-
-    $(\Delta y, \Delta \dot{y})$ — controlled by $\Delta f$
-
-    * System matrix:
-
-      $$A_y = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$$
-  
-    * Input matrix:
-
-      $$B_y = \begin{pmatrix} 0 \\ \frac{1}{M} \end{pmatrix}$$
-
-  
-    * Controllability matrix:
-
-      $$C_y = [B_y, A_y B_y] = \begin{pmatrix} 0 & \frac{1}{M} \\ \frac{1}{M} & 0 \end{pmatrix}$$
-
-  
-    * **Rank**: 2 → Subsystem is controllable.
-
-    ---
-
-    ### Subsystem 2:
-
-    $(\Delta x, \Delta \dot{x}, \Delta \theta, \Delta \dot{\theta})$ — controlled by $\Delta \phi$
-
-    * System matrix:
-
-      $$A_{x\theta} = \begin{pmatrix}
-      0 & 1 & 0 & 0 \\
-      0 & 0 & -g & 0 \\
-      0 & 0 & 0 & 1 \\
-      0 & 0 & 0 & 0
-      \end{pmatrix}$$
-  
-    * Input matrix:
-
-      $$B_{x\theta} = \begin{pmatrix}
-      0 \\
-      -g \\
-      0 \\
-      -K_J
-      \end{pmatrix}
-      \quad \text{where } K_J = \frac{\ell M g}{J}$$
-
-    Compute successive matrix products:
-
-    $$\begin{aligned}
-    A_{x\theta} B_{x\theta} &= \begin{pmatrix} -g \\ 0 \\ -K_J \\ 0 \end{pmatrix} \\
-    A_{x\theta}^2 B_{x\theta} &= \begin{pmatrix} 0 \\ gK_J \\ 0 \\ 0 \end{pmatrix} \\
-    A_{x\theta}^3 B_{x\theta} &= \begin{pmatrix} gK_J \\ 0 \\ 0 \\ 0 \end{pmatrix}
-    \end{aligned}$$
-
-    Construct the controllability matrix:
-
-    $$C_{x\theta} = \begin{pmatrix}
-    0 & -g & 0 & gK_J \\
-    -g & 0 & gK_J & 0 \\
-    0 & -K_J & 0 & 0 \\
-    -K_J & 0 & 0 & 0
-    \end{pmatrix}$$
-
-    For numerical values $g = 1$, $K_J = 3$:
-
-    $$C_{x\theta} = \begin{pmatrix}
-    0 & -1 & 0 & 3 \\
-    -1 & 0 & 3 & 0 \\
-    0 & -3 & 0 & 0 \\
-    -3 & 0 & 0 & 0
-    \end{pmatrix}$$
-
-    Determinant of the submatrix:
-
-    $$\text{det} = 3 \cdot \text{det}\left(
-    \begin{pmatrix}
-    -1 & 0 & 3 \\
-    0 & 3 & 0 \\
-    -3 & 0 & 0
-    \end{pmatrix}
-    \right)
-    = 3 \cdot [(-1)(0 - 0) + 0 + 3(0 - (-9))] = 3 \cdot 27 = 81 \neq 0$$
-
-    * **Rank**: 4 → Subsystem is controllable.
-
-    ---
-
-    ### Overall Controllability
-
-    * Subsystem 1: rank = 2
-    * Subsystem 2: rank = 4
-    * Total rank = $2 + 4 = 6$
-
-     **Conclusion**: The overall system is **controllable**.
     """
     )
     return
@@ -1537,6 +1429,7 @@ def _(mo):
 
 @app.cell
 def _(A_lin, B_lin, np):
+    # We worked with the library control because using the scipy.signal.ctrb did not
     from control import ctrb  
 
     # Manual calculation of full controllability matrix
@@ -1556,6 +1449,17 @@ def _(A_lin, B_lin, np):
 
     print("Manual controllability matrix rank:", rank_full)
     print("control.ctrb controllability matrix rank:", rank_control)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+
+     **Conclusion**: The overall system is **controllable**.
+    """
+    )
     return
 
 
