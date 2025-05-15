@@ -1391,7 +1391,6 @@ def _(mo):
     All six eigenvalues of $A$ are located at the origin ($\lambda = 0$) on the imaginary axis. Therefore:
 
     * The system is not asymptotically stable.
-    * The presence of repeated zero eigenvalues with geometric multiplicity less than algebraic multiplicity (e.g., large Jordan blocks) implies the system is unstable.
     """
     )
     return
@@ -1473,6 +1472,63 @@ def _(mo):
 
     What are the new (reduced) matrices $A$ and $B$ for this reduced system?
     Check the controllability of this new system.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+
+    Let $X_{lat} = [\Delta x,\Delta \dot{x}, \Delta \theta, \Delta \dot{\theta}]^T$ 
+
+    And $u_{lat} = \Delta \phi$.
+
+    The state-space representation $\dot{X}_{lat} = A_{lat} X_{lat} + B_{lat} u_{lat}$ has matrices:
+
+    $A_{lat} = \begin{pmatrix}
+    0 & 1 & 0 & 0 \\
+    0 & 0 & -g & 0 \\
+    0 & 0 & 0 & 1 \\
+    0 & 0 & 0 & 0
+    \end{pmatrix}$
+
+    $B_{lat} = \begin{pmatrix}
+    0 \\
+    -g_c \\
+    0 \\
+    -\ell Mg/J
+    \end{pmatrix}$
+
+    **Controllability Check**:
+
+    The dimension of the lateral state space is $n_{lat}=4$. We use the Kalman Controllability Criterion.
+
+    The controllability matrix is $C_{M,lat} = [B_{lat} \ A_{lat}B_{lat} \ A_{lat}^2 B_{lat} \ A_{lat}^3 B_{lat}]$.
+
+    $B_{lat} = \begin{pmatrix} 0 \\ -g \\ 0 \\ -\ell Mg/J \end{pmatrix}$
+
+    $A_{lat}B_{lat} = \begin{pmatrix} -g \\ 0 \\ -\ell Mg/J \\ 0 \end{pmatrix}$
+
+    $A_{lat}^2 B_{lat} = \begin{pmatrix} 0 \\ g(\ell Mg/J) \\ 0 \\ 0 \end{pmatrix}$
+
+    $A_{lat}^3 B_{lat} = \begin{pmatrix} g(\ell Mg/J) \\ 0 \\ 0 \\ 0 \end{pmatrix}$
+
+    The controllability matrix is:
+
+    $C_{M,lat} = \begin{pmatrix}
+    0 & -g & 0 & g(\ell Mg/J) \\
+    -g & 0 & g(\ell Mg/J) & 0 \\
+    0 & -\ell Mg/J & 0 & 0 \\
+    -\ell Mg/J & 0 & 0 & 0
+    \end{pmatrix}$
+
+    The determinant of this $4 \times 4$ matrix is $(g \ell Mg/J)^2 \neq 0$. Thus, the matrix has full rank (rank 4).
+
+    The linearized lateral system **is controllable**.
+
     """
     )
     return
