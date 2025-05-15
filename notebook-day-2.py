@@ -1600,7 +1600,7 @@ def _(mo):
 
 @app.cell
 def _(A_lin, B_lin, np):
-    from control import ctrb  # Correct package, not scipy.signal
+    from control import ctrb  
 
     # Manual calculation of full controllability matrix
     C_full = np.hstack([
