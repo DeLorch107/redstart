@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.6"
+__generated_with = "0.13.8"
 app = marimo.App()
 
 
@@ -954,6 +954,98 @@ def _(mo):
     ## 🧩 Equilibria
 
     We assume that $|\theta| < \pi/2$, $|\phi| < \pi/2$ and that $f > 0$. What are the possible equilibria of the system for constant inputs $f$ and $\phi$ and what are the corresponding values of these inputs?
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    To find the equilibria of the system, we need to set all time derivatives to zero and solve for the resulting conditions.
+
+    From the state vector [x, dx, y, dy, θ, dθ], we need:
+
+    dx = 0 (zero horizontal velocity)
+
+    dy = 0 (zero vertical velocity)
+
+    dθ = 0 (zero angular velocity)
+
+    d²x = 0 (zero horizontal acceleration)
+
+    d²y = 0 (zero vertical acceleration)
+
+    d²θ = 0 (zero angular acceleration)
+
+    Let's examine each equation:
+
+    Acceleration Equations
+    From the booster's dynamics, we have:
+
+    Horizontal acceleration: $\ddot{x} = -\frac{f}{M} \sin(\theta + \phi)$
+
+    Vertical acceleration: $\ddot{y} = \frac{f}{M} \cos(\theta + \phi) - g$
+
+    Angular acceleration: $\ddot{\theta} = -\frac{\ell \sin(\phi) f}{J}$
+
+    Finding Equilibria
+
+    Setting these accelerations to zero:
+
+    From $\ddot{x} = 0$:
+
+    $-\frac{f}{M} \sin(\theta + \phi) = 0$ 
+
+    Since $f > 0$ (given condition), this means:
+
+    $\sin(\theta + \phi) = 0$
+
+    Therefore:
+
+    $\theta + \phi = n\pi$ where $n$ is an integer.
+
+    With the constraints $|\theta| < \pi/2$ and $|\phi| < \pi/2$,   the only valid solution is:
+
+    $\theta + \phi = 0$ or $\theta = -\phi$
+
+    From $\ddot{\theta} = 0$:
+
+    $-\frac{\ell \sin(\phi) f}{J} = 0$ 
+
+    Again, since $f > 0$ and $\ell > 0$, this means:
+
+    $\sin(\phi) = 0$ 
+
+    Therefore:
+
+    $\phi = 0$ (since $|\phi| < \pi/2$)
+
+    From $\ddot{y} = 0$:
+
+    $\frac{f}{M} \cos(\theta + \phi) - g = 0$
+
+    Therefore:
+
+    $f = \frac{Mg}{\cos(\theta + \phi)}$
+
+    **Combining Conditions**
+
+    From condition 2, we have $\phi = 0$
+    With $\phi = 0$, condition 1 gives us $\theta = 0$
+    With $\theta = 0$ and $\phi = 0$, condition 3 gives us $f = Mg$
+    Conclusion
+    The only equilibrium state of the system under the given constraints is:
+
+    $\theta = 0$ (vertical orientation)
+
+    $\phi = 0$ (thrust aligned with booster axis)
+
+    $f = Mg$ (thrust exactly balancing gravity)
+
+    $x$ and $y$ can be at any constant position with zero velocity
+    This corresponds to the booster hovering stationary in a perfectly vertical orientation.
     """
     )
     return
