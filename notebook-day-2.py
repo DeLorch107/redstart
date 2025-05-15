@@ -1388,9 +1388,7 @@ def _(mo):
 
     ### Conclusion
 
-    All six eigenvalues of $A$ are located at the origin ($\lambda = 0$) on the imaginary axis. Therefore:
-
-    * The system is not asymptotically stable.
+    All six eigenvalues of $A$ are located at the origin ($\lambda = 0$) on the imaginary axis (because it's upper triangular matrix with a diagonal of zeros). Therefore the system is not asymptotically stable.
     """
     )
     return
