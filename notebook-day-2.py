@@ -1211,6 +1211,122 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    Now that we have derived the linearized equations of motion, we can express them in the standard state-space form:
+
+    x
+    ˙
+    =
+    A
+    x
+    +
+    B
+    u
+    x
+    ˙
+     =Ax+Bu
+
+    Where:
+
+    $\mathbf{x}$ is the state vector
+    $\mathbf{u}$ is the input vector
+    $A$ is the system matrix
+    $B$ is the input matrix
+    Defining Our State and Input Vectors
+    For our Redstart booster, we define:
+
+    State vector: $\mathbf{x} = [\Delta x, \Delta \dot{x}, \Delta y, \Delta \dot{y}, \Delta \theta, \Delta \dot{\theta}]^T$
+
+    Input vector: $\mathbf{u} = [\Delta f, \Delta \phi]^T$
+
+    Deriving the A and B Matrices
+    From our linearized equations:
+
+    $\Delta\ddot{x} = -g(\Delta\theta + \Delta\phi)$
+
+    $\Delta\ddot{y} = \frac{\Delta f}{M}$
+
+    $\Delta\ddot{\theta} = -\frac{\ell Mg \Delta\phi}{J}$
+
+    We can rewrite the state-space representation as:
+
+    The linearized state-space model is given by:
+
+    \[
+    \begin{bmatrix}
+    \Delta \dot{x} \\
+    \Delta \ddot{x} \\
+    \Delta \dot{y} \\
+    \Delta \ddot{y} \\
+    \Delta \dot{\theta} \\
+    \Delta \ddot{\theta}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    0 & 1 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & -g & 0 \\
+    0 & 0 & 0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 1 \\
+    0 & 0 & 0 & 0 & 0 & 0
+    \end{bmatrix}
+    \begin{bmatrix}
+    \Delta x \\
+    \Delta \dot{x} \\
+    \Delta y \\
+    \Delta \dot{y} \\
+    \Delta \theta \\
+    \Delta \dot{\theta}
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+    0 & 0 \\
+    0 & -g \\
+    0 & 0 \\
+    \frac{1}{M} & 0 \\
+    0 & 0 \\
+    0 & -\frac{\ell M g}{J}
+    \end{bmatrix}
+    \begin{bmatrix}
+    \Delta f \\
+    \Delta \phi
+    \end{bmatrix}
+    \]
+
+    Therefore, the system matrices are:
+
+    \[
+    A =
+    \begin{bmatrix}
+    0 & 1 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & -g & 0 \\
+    0 & 0 & 0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 1 \\
+    0 & 0 & 0 & 0 & 0 & 0
+    \end{bmatrix}
+    \]
+
+    \[
+    B =
+    \begin{bmatrix}
+    0 & 0 \\
+    0 & -g \\
+    0 & 0 \\
+    \frac{1}{M} & 0 \\
+    0 & 0 \\
+    0 & -\frac{\ell M g}{J}
+    \end{bmatrix}
+    \]
+
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## 🧩 Stability
 
     Is the generic equilibrium asymptotically stable?
