@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.6"
+__generated_with = "0.13.8"
 app = marimo.App()
 
 
@@ -1678,6 +1678,12 @@ def _(mo):
     Provide a geometrical interpretation of $h$ (for example, make a drawing).
     """
     )
+    return
+
+
+@app.cell
+def _():
+    print("Hello world")
     return
 
 
