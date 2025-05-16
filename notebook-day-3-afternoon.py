@@ -2033,6 +2033,125 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+    On a
+
+    \[
+    \ddot{h} = \frac{1}{M}
+    \begin{bmatrix}
+    \sin \theta \\
+    -\cos \theta
+    \end{bmatrix} z
+    -
+    \begin{bmatrix}
+    0 \\
+    g
+    \end{bmatrix}
+    \]
+
+    On introduit alors le vecteur \( v \) défini par :
+
+    \[
+    v := \ddot{h} + 
+    \begin{bmatrix}
+    0 \\
+    g
+    \end{bmatrix}
+    =
+    \frac{z}{M}
+    \begin{bmatrix}
+    \sin \theta \\
+    -\cos \theta
+    \end{bmatrix}
+    \]
+
+    alors
+
+     l’angle \( \theta \) est alors :
+
+    \[
+    \theta = \arctan2(v_x, -v_y)
+    \]
+
+    Valeur de  \( z \) :  
+
+    \[
+    z = M \cdot \|v\|
+    \]
+
+
+    On a :
+
+    \[
+    h^{(3)} = \frac{1}{M} R\left(\theta - \frac{\pi}{2} \right)
+    \begin{bmatrix}
+    \dot{z} \\
+    z \dot{\theta}
+    \end{bmatrix}
+    \]
+
+    En inversant cette relation :
+
+    \[
+    \begin{bmatrix}
+    \dot{z} \\
+    z \dot{\theta}
+    \end{bmatrix}
+    = M \cdot R\left(\frac{\pi}{2} - \theta\right) \cdot h^{(3)}
+    \]
+
+    D'où :
+
+    - \( \dot{z} \) : correspond à la première composante du vecteur obtenu.
+    - \( \dot{\theta} = \dfrac{1}{z} \times \text{deuxième composante} \)
+
+    Grâce à la géométrie du système, on a les relations suivantes :
+
+    Position :
+
+    \[
+    x = h_x + \frac{\ell}{3} \sin \theta
+    \quad\text{et}\quad
+    y = h_y - \frac{\ell}{3} \cos \theta
+    \]
+
+    Vitesse :
+
+    \[
+    \dot{x} = \dot{h}_x + \frac{\ell}{3} \cos \theta \cdot \dot{\theta}
+    \quad\text{et}\quad
+    \dot{y} = \dot{h}_y + \frac{\ell}{3} \sin \theta \cdot \dot{\theta}
+    \]
+    """
+    )
+    return
+
+
+@app.cell
+def _(M, g, l, np):
+    def T_inv(h_x, h_y, dh_x, dh_y, d2h_x, d2h_y, d3h_x, d3h_y):
+        v = np.array([d2h_x, d2h_y + g])
+        theta = np.arctan2(v[0], -v[1]) 
+        z = M * np.linalg.norm(v)
+        R_theta = np.array([
+            [np.sin(theta), -np.cos(theta)],
+            [np.cos(theta),  np.sin(theta)]
+        ])
+        d3h = np.array([d3h_x, d3h_y])
+        inv_input = np.linalg.solve(R_theta, M * d3h)
+        dz = inv_input[0]
+        dtheta = inv_input[1] / z
+        x = h_x + (l / 3) * np.sin(theta)
+        y = h_y - (l / 3) * np.cos(theta)
+        dx = dh_x + (l / 3) * np.cos(theta) * dtheta
+        dy = dh_y + (l / 3) * np.sin(theta) * dtheta
+        return x, dx, y, dy, theta, dtheta, z, dz
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
     ## 🧩 Admissible Path Computation
 
     Implement a function
