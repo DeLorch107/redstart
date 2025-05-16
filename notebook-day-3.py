@@ -1681,9 +1681,25 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
-    print("Hello world")
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    \[ h = \begin{bmatrix} x - \frac{\ell}{3}\sin\theta \\ y + \frac{\ell}{3}\cos\theta \end{bmatrix} \]
+
+    -Centre de masse *\((x,y)\)*
+
+    -Angle d'inclinaison *\(\theta\)*
+
+    -Demi-longueur du booster *\(\ell\)*
+
+    - Point situé à \(\ell/3\) du Centre de masse, côté opposé à la poussée
+    - Décrit un arc de cercle avec \(\theta\):
+      - \(\theta=0°\): Au-dessus du Centre de masse \((x, y+\ell/3)\)
+      - \(\theta=90°\): Sur le côté \((x-\ell/3, y)\)
+    ![Schéma géométrique du point h](.\Users\user\Desktop\totomatik\test\redstart\redstart\Capture d'écran 2025-05-16 104823.png)
+    """
+    )
     return
 
 
@@ -1694,6 +1710,33 @@ def _(mo):
     ## 🧩 First and Second-Order Derivatives
 
     Compute $\dot{h}$ as a function of $\dot{x}$, $\dot{y}$, $\theta$ and $\dot{\theta}$ (and constants) and then $\ddot{h}$ as a function of $\theta$ and $z$ (and constants) when the auxiliary system is plugged in the booster.
+    """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+    on a :
+
+    \[ h = \begin{bmatrix} x - \frac{\ell}{3}\sin\theta \\ y + \frac{\ell}{3}\cos\theta \end{bmatrix} \]
+    ## La dérivée première \( \dot{h} \)
+    \[
+    \dot{h} = \begin{bmatrix} 
+    \dot{x} - \frac{\ell}{3}\dot{\theta}\cos\theta \\ 
+    \dot{y} - \frac{\ell}{3}\dot{\theta}\sin\theta 
+    \end{bmatrix}
+    \]
+
+    ## La dérivée seconde \( \ddot{h} \)
+    \[
+    \ddot{h} = \begin{bmatrix} 
+    -\frac{z}{M} + \frac{\ell}{3}\dot{\theta}^2\sin\theta \\ 
+    \frac{m\ell v_2}{3Mz} - g - \frac{\ell}{3}\dot{\theta}^2\cos\theta 
+    \end{bmatrix}
+    \]
     """
     )
     return
