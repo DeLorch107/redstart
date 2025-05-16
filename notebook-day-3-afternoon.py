@@ -1995,14 +1995,14 @@ def _(mo):
 
 
 @app.cell
-def _(M, g, l, np, thata):
+def _(M, g, l, np):
     def T(x,dx,y,dy,theta,dtheta,z,dz):
 
         h_x= x-(ℓ/3)*np.sin(theta)
         h_y= y+(ℓ/3)*np.cos(theta)
 
-        dh_x=dx - (ℓ / 3) * np.cos(thata) * dtheta
-        dh_y = dy - (ℓ / 3) * np.sin(thata) * dtheta
+        dh_x=dx - (ℓ / 3) * np.cos(theta) * dtheta
+        dh_y = dy - (ℓ / 3) * np.sin(theta) * dtheta
 
         d2h_x = 1/M *np.sin(theta)*z
         d2h_y = -1/M * np.cos(theta)*z-g
