@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.6"
+__generated_with = "0.13.8"
 app = marimo.App()
 
 
@@ -1991,6 +1991,26 @@ def _(mo):
     Implement a function `T` of `x, dx, y, dy, theta, dtheta, z, dz` that returns `h_x, h_y, dh_x, dh_y, d2h_x, d2h_y, d3h_x, d3h_y`.
     """
     )
+    return
+
+
+@app.cell
+def _(M, g, l, np, thata):
+    def T(x,dx,y,dy,theta,dtheta,z,dz):
+
+        h_x= x-(ℓ/3)*np.sin(theta)
+        h_y= y+(ℓ/3)*np.cos(theta)
+
+        dh_x=dx - (ℓ / 3) * np.cos(thata) * dtheta
+        dh_y = dy - (ℓ / 3) * np.sin(thata) * dtheta
+
+        d2h_x = 1/M *np.sin(theta)*z
+        d2h_y = -1/M * np.cos(theta)*z-g
+
+        d3h_x = ((1/M )*np.cos(theta)*dtheta*z)+((1/M)*np.sin(theta)*dz)
+        d3h_y = ((1/M )*np.sin(theta)*dtheta*z)-((1/M)*np.cos(theta)*dz)
+
+        return h_x, h_y, dh_x, dh_y, d2h_x, d2h_y, d3h_x, d3h_y
     return
 
 
